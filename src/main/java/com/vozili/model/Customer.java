@@ -1,7 +1,10 @@
 package com.vozili.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
+@Data
 @Entity
 @Table(name = "customer")
 public class Customer {
@@ -9,8 +12,13 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "login")
     private String login;
+
+    private String password;
+
+    private String role;
+
+    private boolean active;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booked_order", referencedColumnName = "id")
@@ -19,36 +27,4 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "personal_order", referencedColumnName = "id")
     private Order personalOrder;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getLogin() {
-        return login;
-    }
-
-    public void setLogin(String login) {
-        this.login = login;
-    }
-
-    public Order getBookedOrder() {
-        return bookedOrder;
-    }
-
-    public void setBookedOrder(Order bookedOrder) {
-        this.bookedOrder = bookedOrder;
-    }
-
-    public Order getPersonalOrder() {
-        return personalOrder;
-    }
-
-    public void setPersonalOrder(Order personalOrder) {
-        this.personalOrder = personalOrder;
-    }
 }

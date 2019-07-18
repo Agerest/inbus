@@ -32,4 +32,9 @@ public class HtmlController {
     public String personalOrders(Model model) {
         return "Personal";
     }
+
+    @RequestMapping(value = {"/registration"}, method = RequestMethod.GET)
+    public String registration(Model model) {
+        return "Sing_up";
+    }
 }
