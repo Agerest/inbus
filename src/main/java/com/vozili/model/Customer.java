@@ -1,24 +1,30 @@
 package com.vozili.model;
 
+import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Arrays;
+import java.util.Collection;
 
 @Data
 @Entity
 @Table(name = "customer")
-public class Customer {
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@RequiredArgsConstructor
+public class Customer implements UserDetails {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    private String login;
+    private final String username;
 
-    private String password;
-
-    private String role;
-
-    private boolean active;
+    private final String password;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booked_order", referencedColumnName = "id")
@@ -27,4 +33,29 @@ public class Customer {
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "personal_order", referencedColumnName = "id")
     private Order personalOrder;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
