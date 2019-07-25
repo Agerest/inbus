@@ -1,8 +1,13 @@
 package com.vozili.model;
 
+import lombok.Data;
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.sql.Time;
 
+@Data
+@ToString
 @Entity
 @Table(name = "contract")
 public class Order {
@@ -25,63 +30,6 @@ public class Order {
     @Column(name = "number_auto")
     private String numberAuto;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNumberRoute() {
-        return numberRoute;
-    }
-
-    public void setNumberRoute(String numberRoute) {
-        this.numberRoute = numberRoute;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public int getPrice() {
-        return price;
-    }
-
-    public void setPrice(int price) {
-        this.price = price;
-    }
-
-    public Time getDate() {
-        return date;
-    }
-
-    public void setDate(Time date) {
-        this.date = date;
-    }
-
-    public String getNumberAuto() {
-        return numberAuto;
-    }
-
-    public void setNumberAuto(String numberAuto) {
-        this.numberAuto = numberAuto;
-    }
-
-    @Override
-    public String toString() {
-        return "Order{" +
-                "id=" + id +
-                ", numberRoute='" + numberRoute + '\'' +
-                ", description='" + description + '\'' +
-                ", price=" + price +
-                ", date=" + date +
-                ", numberAuto='" + numberAuto + '\'' +
-                '}';
-    }
+    @ManyToOne
+    private Customer customer;
 }

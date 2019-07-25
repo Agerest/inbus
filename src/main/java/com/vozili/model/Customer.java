@@ -15,7 +15,7 @@ import java.util.Collection;
 @Data
 @Entity
 @Table(name = "customer")
-@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
+@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
 @RequiredArgsConstructor
 public class Customer implements UserDetails {
     @Id
@@ -25,6 +25,10 @@ public class Customer implements UserDetails {
     private final String username;
 
     private final String password;
+
+    private Boolean active;
+
+    private String authority;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booked_order", referencedColumnName = "id")
@@ -36,7 +40,7 @@ public class Customer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Arrays.asList(new SimpleGrantedAuthority(authority));
     }
 
     @Override
@@ -56,6 +60,6 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }

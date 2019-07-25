@@ -17,9 +17,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private AccessDeniedHandler accessDeniedHandler;
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new StandardPasswordEncoder("53cr3t");
@@ -37,9 +34,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                     .permitAll()
                 .and()
                     .logout()
-                    .permitAll()
-                .and()
-                    .exceptionHandling().accessDeniedHandler(accessDeniedHandler);
+                    .permitAll();
     }
 
     @Override
