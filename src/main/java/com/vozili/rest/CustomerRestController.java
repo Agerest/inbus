@@ -5,15 +5,18 @@ import com.vozili.model.Order;
 import com.vozili.repository.CustomerRepository;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+@Slf4j
 @Controller
 @RequestMapping("/customer")
 public class CustomerRestController {
@@ -27,52 +30,52 @@ public class CustomerRestController {
     private CustomerRepository customerRepository;
 
     @RequestMapping(value = "/booked", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> getBookedOrder() {
-        Order result = customerService.getBookedOrder();
+    public ResponseEntity<Order> getBookedOrder(@AuthenticationPrincipal Customer customer) {
+        Order result = customerService.getBookedOrder(customer.getId());
         if (result == null) {
             return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
         }
+        log.info(result.toString());
         return new ResponseEntity<Order>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/personal", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> getPersonalOrder() {
-        Order result = customerService.getPersonalOrder();
+    public ResponseEntity<Order> getPersonalOrder(@AuthenticationPrincipal Customer customer) {
+        Order result = customerService.getPersonalOrder(customer.getId());
         if (result == null) {
             return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
         }
+        log.info(result.toString());
         return new ResponseEntity<Order>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> getCustomer() {
-        Customer customer = customerService.getCustomer();
+    public ResponseEntity<Customer> getCustomer(@AuthenticationPrincipal Customer customer) {
         if (customer == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
         }
+        log.info(customer.toString());
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/booked/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id) {
-        Customer result = customerService.getCustomer();
+    public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id, @AuthenticationPrincipal Customer customer) {
         Order order = orderService.getById(id);
-        result.setBookedOrder(order);
-        customerRepository.save(result);
-
+        customer.setBookedOrder(order);
+        customerRepository.save(customer);
+        log.info(customer.toString());
         if (order == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
         }
-
-        return new ResponseEntity<Customer>(result, HttpStatus.OK);
+        log.info(order.toString());
+        return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/booked", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> deleteBookedOrder() {
-        Customer result = customerService.getCustomer();
-        result.setBookedOrder(null);
-        customerRepository.save(result);
-
-        return new ResponseEntity<Customer>(result, HttpStatus.OK);
+    public ResponseEntity<Customer> deleteBookedOrder(@AuthenticationPrincipal Customer customer) {
+        customer.setBookedOrder(null);
+        customerRepository.save(customer);
+        log.info(customer.toString());
+        return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }
 }

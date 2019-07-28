@@ -13,17 +13,17 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public Customer getCustomer() {
-        return customerRepository.findOne(1L);
+    public Customer getCustomer(Long id) {
+        return customerRepository.findOne(id);
     }
 
     @Override
-    public Order getBookedOrder() {
-        return customerRepository.findOne(1L).getBookedOrder();
+    public Order getBookedOrder(Long id) {
+        return customerRepository.findOne(id).getBookedOrder();
     }
 
     @Override
-    public Order getPersonalOrder() {
-        return customerRepository.findOne(1L).getPersonalOrder();
+    public Order getPersonalOrder(Long id) {
+        return customerRepository.findOne(id).getPersonalOrder();
     }
 }

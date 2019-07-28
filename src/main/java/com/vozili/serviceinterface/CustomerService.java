@@ -4,9 +4,9 @@ import com.vozili.model.Customer;
 import com.vozili.model.Order;
 
 public interface CustomerService {
-    Customer getCustomer();
+    Customer getCustomer(Long id);
 
-    Order getBookedOrder();
+    Order getBookedOrder(Long id);
 
-    Order getPersonalOrder();
+    Order getPersonalOrder(Long id);
 }
