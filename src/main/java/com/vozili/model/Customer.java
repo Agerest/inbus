@@ -12,7 +12,7 @@ import java.util.Collection;
 @Data
 @Entity
 @Table(name = "customer")
-@NoArgsConstructor(access = AccessLevel.PUBLIC, force = true)
+@NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 @ToString
 public class Customer implements UserDetails {
