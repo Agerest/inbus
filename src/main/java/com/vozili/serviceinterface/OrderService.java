@@ -1,5 +1,6 @@
 package com.vozili.serviceinterface;
 
+import com.vozili.model.Customer;
 import com.vozili.model.Order;
 
 import java.util.List;
@@ -9,7 +10,7 @@ public interface OrderService {
 
     List<Order> getAll();
 
-    Order save(Order order);
+    Customer savePersonalOrder(Order order);
 
     void delete(Long id);
 }

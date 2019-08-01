@@ -6,7 +6,7 @@ import com.vozili.model.Order;
 public interface CustomerService {
     Customer getCustomer(Long id);
 
-    Order getBookedOrder(Long id);
+    Order getBookedOrder(String username);
 
-    Order getPersonalOrder(Long id);
+    Order getPersonalOrder(String username);
 }

@@ -1,0 +1,74 @@
+package com.vozili.service;
+
+import com.vozili.model.Customer;
+import com.vozili.model.Order;
+import com.vozili.repository.CustomerRepository;
+import com.vozili.repository.OrderRepository;
+import com.vozili.serviceinterface.OrderService;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.test.context.junit4.SpringRunner;
+
+import static org.assertj.core.api.Java6Assertions.assertThat;
+
+@RunWith(SpringRunner.class)
+public class OrderServiceImplTest {
+
+    @TestConfiguration
+    static class CustomerServiceTestContextConfiguration {
+
+        @Bean
+        public OrderService orderService() {
+            return new OrderServiceImpl();
+        }
+
+    }
+
+    @Autowired
+    private OrderService orderService;
+
+    @MockBean
+    private OrderRepository orderRepository;
+
+    @MockBean
+    private CustomerRepository customerRepository;
+
+    @Before
+    public void setUp() {
+        Order order = new Order();
+        order.setId(999L);
+        Customer customer = new Customer("Alex", "123");
+        order.setCustomer(customer);
+
+        Mockito.when(orderRepository.getOne(999L)).thenReturn(order);
+        Mockito.when(orderRepository.save(order)).thenReturn(order);
+        Mockito.when(customerRepository.save(customer)).thenReturn(customer);
+    }
+
+    @Test
+    public void whenValidId_thenOrderShouldBeFound() {
+        Long id = 999L;
+
+        Order found = orderService.getById(id);
+
+        assertThat(found.getId()).isEqualTo(id);
+    }
+
+    @Test
+    public void whenSavePersonalOrder_thenReturnCustomerWithPersonalOrder() {
+        Order order = new Order();
+        order.setId(999L);
+        Customer customer = new Customer("Alex", "123");
+        order.setCustomer(customer);
+        Customer found = orderService.savePersonalOrder(order);
+
+        assertThat(found.getPersonalOrder().getId()).isEqualTo(order.getId());
+    }
+
+}

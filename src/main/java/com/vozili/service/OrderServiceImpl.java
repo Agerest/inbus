@@ -17,6 +17,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private CustomerRepository customerRepository;
+
     @Override
     public Order getById(Long id) {
         return repository.getOne(id);
@@ -28,12 +29,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Order save(Order order) {
+    public Customer savePersonalOrder(Order order) {
         Order result = repository.save(order);
-        Customer tmp = customerRepository.findOne(1L);
-        tmp.setPersonalOrder(result);
-        customerRepository.save(tmp);
-        return result;
+        Customer customer = order.getCustomer();
+        customer.setPersonalOrder(result);
+        customerRepository.save(customer);
+        return customer;
     }
 
     @Override

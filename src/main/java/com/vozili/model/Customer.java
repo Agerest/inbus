@@ -15,6 +15,7 @@ import java.util.Collection;
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 @ToString
+@EqualsAndHashCode
 public class Customer implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,7 +39,7 @@ public class Customer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(authority));
+        return Arrays.asList(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
@@ -58,6 +59,6 @@ public class Customer implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return true;
     }
 }

@@ -1,6 +1,7 @@
 package com.vozili.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.sql.Time;
 @ToString
 @Entity
 @Table(name = "contract")
+@EqualsAndHashCode
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

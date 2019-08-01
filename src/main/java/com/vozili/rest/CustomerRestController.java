@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,8 +31,8 @@ public class CustomerRestController {
     private CustomerRepository customerRepository;
 
     @RequestMapping(value = "/booked", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> getBookedOrder(@AuthenticationPrincipal Customer customer) {
-        Order result = customerService.getBookedOrder(customer.getId());
+    public ResponseEntity<Order> getBookedOrder(@AuthenticationPrincipal UserDetails customer) {
+        Order result = customerService.getBookedOrder(customer.getUsername());
         if (result == null) {
             return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
         }
@@ -40,8 +41,8 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "/personal", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> getPersonalOrder(@AuthenticationPrincipal Customer customer) {
-        Order result = customerService.getPersonalOrder(customer.getId());
+    public ResponseEntity<Order> getPersonalOrder(@AuthenticationPrincipal UserDetails customer) {
+        Order result = customerService.getPersonalOrder(customer.getUsername());
         if (result == null) {
             return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
         }
@@ -50,7 +51,8 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> getCustomer(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Customer> getCustomer(@AuthenticationPrincipal UserDetails user) {
+        Customer customer = customerRepository.findByUsername(user.getUsername());
         if (customer == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
         }
@@ -59,7 +61,8 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "/booked/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id, @AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
+        Customer customer = customerRepository.findByUsername(user.getUsername());
         Order order = orderService.getById(id);
         customer.setBookedOrder(order);
         customerRepository.save(customer);
@@ -72,7 +75,8 @@ public class CustomerRestController {
     }
 
     @RequestMapping(value = "/booked", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Customer> deleteBookedOrder(@AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Customer> deleteBookedOrder(@AuthenticationPrincipal UserDetails user) {
+        Customer customer = customerRepository.findByUsername(user.getUsername());
         customer.setBookedOrder(null);
         customerRepository.save(customer);
         log.info(customer.toString());

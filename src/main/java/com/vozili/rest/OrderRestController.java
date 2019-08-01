@@ -45,7 +45,7 @@ public class OrderRestController {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Order> addOrder(@RequestBody Order order, @AuthenticationPrincipal Customer customer) {
         order.setCustomer(customer);
-        orderService.save(order);
+        orderService.savePersonalOrder(order);
         log.info(order.toString());
         return new ResponseEntity<Order>(HttpStatus.OK);
     }

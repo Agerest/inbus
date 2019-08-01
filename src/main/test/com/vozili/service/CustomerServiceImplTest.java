@@ -44,7 +44,7 @@ public class CustomerServiceImplTest {
 
     @Test
     public void whenValidId_thenCustomerShouldBeFound() {
-        Long id = 1L;
+        Long id = 999L;
         Customer found = customerService.getCustomer(id);
 
         assertThat(found.getId()).isEqualTo(id);
