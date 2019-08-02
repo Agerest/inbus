@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.sql.Time;
 
 @Data
@@ -12,7 +13,7 @@ import java.sql.Time;
 @Entity
 @Table(name = "contract")
 @EqualsAndHashCode
-public class Order {
+public class Order implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,6 +33,5 @@ public class Order {
     @Column(name = "number_auto")
     private String numberAuto;
 
-    @ManyToOne
     private Customer customer;
 }

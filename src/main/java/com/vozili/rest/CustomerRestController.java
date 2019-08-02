@@ -2,7 +2,7 @@ package com.vozili.rest;
 
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.CustomerRepository;
+import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class CustomerRestController {
     private OrderService orderService;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @RequestMapping(value = "/booked", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Order> getBookedOrder(@AuthenticationPrincipal UserDetails customer) {
@@ -52,7 +52,7 @@ public class CustomerRestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> getCustomer(@AuthenticationPrincipal UserDetails user) {
-        Customer customer = customerRepository.findByUsername(user.getUsername());
+        Customer customer = usersRepository.findByUsername(user.getUsername());
         if (customer == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
         }
@@ -62,10 +62,10 @@ public class CustomerRestController {
 
     @RequestMapping(value = "/booked/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
-        Customer customer = customerRepository.findByUsername(user.getUsername());
+        Customer customer = usersRepository.findByUsername(user.getUsername());
         Order order = orderService.getById(id);
         customer.setBookedOrder(order);
-        customerRepository.save(customer);
+        usersRepository.save(customer);
         log.info(customer.toString());
         if (order == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
@@ -76,9 +76,9 @@ public class CustomerRestController {
 
     @RequestMapping(value = "/booked", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> deleteBookedOrder(@AuthenticationPrincipal UserDetails user) {
-        Customer customer = customerRepository.findByUsername(user.getUsername());
+        Customer customer = usersRepository.findByUsername(user.getUsername());
         customer.setBookedOrder(null);
-        customerRepository.save(customer);
+        usersRepository.save(customer);
         log.info(customer.toString());
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }

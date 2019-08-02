@@ -3,7 +3,7 @@ package com.vozili.rest;
 import com.vozili.config.SpringSecurityWebAuxTestConfig;
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.CustomerRepository;
+import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
 import org.junit.Test;
@@ -44,7 +44,7 @@ public class CustomerRestControllerTest {
     private OrderService orderService;
 
     @MockBean
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -81,9 +81,9 @@ public class CustomerRestControllerTest {
     @WithUserDetails("Alex")
     public void givenCustomer_whenGetCustomer_thenReturnJsonArray() throws Exception {
 
-        Customer customer = new Customer("Alex", "123");
+        Customer customer = new Customer("Alex", "123", true);
 
-        given(customerRepository.findByUsername("Alex")).willReturn(customer);
+        given(usersRepository.findByUsername("Alex")).willReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.get("/customer")
                 .accept(MediaType.APPLICATION_JSON))
@@ -96,15 +96,15 @@ public class CustomerRestControllerTest {
     public void givenCustomerWithBookedOrder_whenSetBookedOrder_thenReturnJsonArray() throws Exception {
         Long id = 99L;
 
-        Customer customer = new Customer("Alex", "123");
+        Customer customer = new Customer("Alex", "123",true);
 
         Order order = new Order();
         order.setId(999L);
 
 
-        given(customerRepository.findByUsername(customer.getUsername())).willReturn(customer);
+        given(usersRepository.findByUsername(customer.getUsername())).willReturn(customer);
         given(orderService.getById(id)).willReturn(order);
-        when(customerRepository.save(customer)).thenReturn(customer);
+        when(usersRepository.save(customer)).thenReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.put("/customer/booked/" + id.intValue())
                 .accept(MediaType.APPLICATION_JSON))
@@ -115,15 +115,15 @@ public class CustomerRestControllerTest {
     @Test
     @WithUserDetails("Alex")
     public void givenCustomerWithoutBookedOrder_whenDeleteBookedOrder_thenReturnJsonArray() throws Exception {
-        Customer customer = new Customer("Alex", "123");
+        Customer customer = new Customer("Alex", "123",true);
 
         Order order = new Order();
         order.setId(999L);
 
         customer.setBookedOrder(order);
 
-        given(customerRepository.findByUsername(customer.getUsername())).willReturn(customer);
-        when(customerRepository.save(customer)).thenReturn(customer);
+        given(usersRepository.findByUsername(customer.getUsername())).willReturn(customer);
+        when(usersRepository.save(customer)).thenReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.delete("/customer/booked")
                 .accept(MediaType.APPLICATION_JSON))

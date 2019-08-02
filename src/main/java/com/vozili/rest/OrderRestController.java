@@ -2,15 +2,18 @@ package com.vozili.rest;
 
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.CustomerRepository;
+import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,7 +33,7 @@ public class OrderRestController {
     private CustomerService customerService;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Order>> getAllOrders() {
@@ -43,7 +46,8 @@ public class OrderRestController {
     }
 
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> addOrder(@RequestBody Order order, @AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Order> addOrder(@RequestBody Order order, @AuthenticationPrincipal UserDetails user) {
+        Customer customer = customerService.getCustomer(user.getUsername());
         order.setCustomer(customer);
         orderService.savePersonalOrder(order);
         log.info(order.toString());
@@ -51,14 +55,15 @@ public class OrderRestController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<Order> deleteOrder(@PathVariable Long id, @AuthenticationPrincipal Customer customer) {
+    public ResponseEntity<Order> deleteOrder(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
+        Customer customer = customerService.getCustomer(user.getUsername());
         Order order = orderService.getById(id);
         if (order == null) {
             return new ResponseEntity<Order>(HttpStatus.NOT_FOUND);
         }
         log.info(order.toString());
         customer.setPersonalOrder(null);
-        customerRepository.save(customer);
+        usersRepository.save(customer);
         orderService.delete(id);
         log.info(customer.toString());
         return new ResponseEntity<Order>(HttpStatus.NO_CONTENT);

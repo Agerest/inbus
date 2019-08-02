@@ -6,28 +6,24 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.Collection;
 
 @Data
 @Entity
-@Table(name = "customer")
+@Table(name = "users")
 @NoArgsConstructor(access = AccessLevel.PRIVATE, force = true)
 @RequiredArgsConstructor
 @ToString
 @EqualsAndHashCode
-public class Customer implements UserDetails {
+public class Customer implements UserDetails, Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
     private final String username;
 
     private final String password;
 
-    private Boolean active;
-
-    private String authority;
+    private final Boolean enabled;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booked_order", referencedColumnName = "id")
@@ -39,7 +35,7 @@ public class Customer implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("USER"));
+        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
     }
 
     @Override

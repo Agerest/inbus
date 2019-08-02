@@ -2,8 +2,8 @@ package com.vozili.service;
 
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.CustomerRepository;
 import com.vozili.repository.OrderRepository;
+import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +16,7 @@ public class OrderServiceImpl implements OrderService {
     private OrderRepository repository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @Override
     public Order getById(Long id) {
@@ -33,7 +33,7 @@ public class OrderServiceImpl implements OrderService {
         Order result = repository.save(order);
         Customer customer = order.getCustomer();
         customer.setPersonalOrder(result);
-        customerRepository.save(customer);
+        usersRepository.save(customer);
         return customer;
     }
 

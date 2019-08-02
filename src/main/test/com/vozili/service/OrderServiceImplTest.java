@@ -2,8 +2,8 @@ package com.vozili.service;
 
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.CustomerRepository;
 import com.vozili.repository.OrderRepository;
+import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.OrderService;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,18 +37,18 @@ public class OrderServiceImplTest {
     private OrderRepository orderRepository;
 
     @MockBean
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @Before
     public void setUp() {
         Order order = new Order();
         order.setId(999L);
-        Customer customer = new Customer("Alex", "123");
-        order.setCustomer(customer);
+        Customer customer = new Customer("Alex", "123", true);
+//        order.setCustomer(customer);
 
         Mockito.when(orderRepository.getOne(999L)).thenReturn(order);
         Mockito.when(orderRepository.save(order)).thenReturn(order);
-        Mockito.when(customerRepository.save(customer)).thenReturn(customer);
+        Mockito.when(usersRepository.save(customer)).thenReturn(customer);
     }
 
     @Test
@@ -64,8 +64,8 @@ public class OrderServiceImplTest {
     public void whenSavePersonalOrder_thenReturnCustomerWithPersonalOrder() {
         Order order = new Order();
         order.setId(999L);
-        Customer customer = new Customer("Alex", "123");
-        order.setCustomer(customer);
+        Customer customer = new Customer("Alex", "123", true);
+//        order.setCustomer(customer);
         Customer found = orderService.savePersonalOrder(order);
 
         assertThat(found.getPersonalOrder().getId()).isEqualTo(order.getId());

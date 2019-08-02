@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Orders</title>
@@ -27,6 +27,9 @@
     <button onclick="location.href='/main/about'">
         <p>О нас</p>
     </button>
+    <form method="POST" th:action="@{/logout}">
+        <input type="submit" value="Logout"/>
+    </form>
 </nav>
 <main>
     <section class="search">

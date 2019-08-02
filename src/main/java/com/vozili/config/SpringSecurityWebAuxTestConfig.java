@@ -16,8 +16,7 @@ public class SpringSecurityWebAuxTestConfig {
     @Bean
     @Primary
     public UserDetailsService userDetailsService() {
-        Customer customer = new Customer("Alex","123");
-        customer.setId(999L);
+        Customer customer = new Customer("Alex","123", true);
 
         return new InMemoryUserDetailsManager(Arrays.<UserDetails>asList(customer));
     }

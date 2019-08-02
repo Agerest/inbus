@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class HtmlController {
 
-    @RequestMapping(value = {"/", "/index"}, method = RequestMethod.GET)
+    @RequestMapping(value = {"/login"}, method = RequestMethod.GET)
     public String hello(Model model) {
-        return "Sign_in";
+        return "Signin";
     }
 
     @RequestMapping(value = {"/main"}, method = RequestMethod.GET)
@@ -35,6 +35,6 @@ public class HtmlController {
 
     @RequestMapping(value = {"/registration"}, method = RequestMethod.GET)
     public String registration(Model model) {
-        return "Sing_up";
+        return "Signup";
     }
 }

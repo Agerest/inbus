@@ -12,21 +12,21 @@ import static org.assertj.core.api.Java6Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class CustomerRepositoryTest {
+public class usersRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    private UsersRepository usersRepository;
 
     @Test
     public void whenFindByUsername_thenReturnCustomer() {
-        Customer alex = new Customer("Alex", "h2p");
+        Customer alex = new Customer("Alex", "h2p", true);
         entityManager.persist(alex);
         entityManager.flush();
 
-        Customer found = customerRepository.findByUsername(alex.getUsername());
+        Customer found = usersRepository.findByUsername(alex.getUsername());
 
         assertThat(found.getUsername()).isEqualTo(alex.getUsername());
     }
