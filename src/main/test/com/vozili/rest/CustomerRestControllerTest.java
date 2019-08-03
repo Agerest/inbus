@@ -3,12 +3,12 @@ package com.vozili.rest;
 import com.vozili.config.SpringSecurityWebAuxTestConfig;
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -43,14 +43,8 @@ public class CustomerRestControllerTest {
     @MockBean
     private OrderService orderService;
 
-    @MockBean
-    private UsersRepository usersRepository;
-
-    @Autowired
-    private UserDetailsService userDetailsService;
-
     @Test
-    @WithUserDetails("Alex")
+    @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenOrder_whenGetBookedOrder_thenReturnJsonArray() throws Exception {
         Order order = new Order();
         order.setId(999L);
@@ -64,7 +58,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    @WithUserDetails("Alex")
+    @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenOrder_whenGetPersonalOrder_thenReturnJsonArray() throws Exception {
         Order order = new Order();
         order.setId(999L);
@@ -78,12 +72,12 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    @WithUserDetails("Alex")
+    @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenCustomer_whenGetCustomer_thenReturnJsonArray() throws Exception {
 
         Customer customer = new Customer("Alex", "123", true);
 
-        given(usersRepository.findByUsername("Alex")).willReturn(customer);
+        given(customerService.findByUsername("Alex")).willReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.get("/customer")
                 .accept(MediaType.APPLICATION_JSON))
@@ -92,7 +86,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    @WithUserDetails("Alex")
+    @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenCustomerWithBookedOrder_whenSetBookedOrder_thenReturnJsonArray() throws Exception {
         Long id = 99L;
 
@@ -102,9 +96,9 @@ public class CustomerRestControllerTest {
         order.setId(999L);
 
 
-        given(usersRepository.findByUsername(customer.getUsername())).willReturn(customer);
+        given(customerService.findByUsername(customer.getUsername())).willReturn(customer);
         given(orderService.getById(id)).willReturn(order);
-        when(usersRepository.save(customer)).thenReturn(customer);
+        when(customerService.save(customer)).thenReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.put("/customer/booked/" + id.intValue())
                 .accept(MediaType.APPLICATION_JSON))
@@ -113,7 +107,7 @@ public class CustomerRestControllerTest {
     }
 
     @Test
-    @WithUserDetails("Alex")
+    @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenCustomerWithoutBookedOrder_whenDeleteBookedOrder_thenReturnJsonArray() throws Exception {
         Customer customer = new Customer("Alex", "123",true);
 
@@ -122,8 +116,8 @@ public class CustomerRestControllerTest {
 
         customer.setBookedOrder(order);
 
-        given(usersRepository.findByUsername(customer.getUsername())).willReturn(customer);
-        when(usersRepository.save(customer)).thenReturn(customer);
+        given(customerService.findByUsername(customer.getUsername())).willReturn(customer);
+        when(customerService.save(customer)).thenReturn(customer);
 
         mvc.perform(MockMvcRequestBuilders.delete("/customer/booked")
                 .accept(MediaType.APPLICATION_JSON))

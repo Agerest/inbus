@@ -32,9 +32,6 @@ public class OrderRestController {
     @Autowired
     private CustomerService customerService;
 
-    @Autowired
-    private UsersRepository usersRepository;
-
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<List<Order>> getAllOrders() {
         List<Order> result = this.orderService.getAll();
@@ -48,8 +45,7 @@ public class OrderRestController {
     @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Order> addOrder(@RequestBody Order order, @AuthenticationPrincipal UserDetails user) {
         Customer customer = customerService.getCustomer(user.getUsername());
-        order.setCustomer(customer);
-        orderService.savePersonalOrder(order);
+        orderService.savePersonalOrder(order, customer);
         log.info(order.toString());
         return new ResponseEntity<Order>(HttpStatus.OK);
     }
@@ -63,7 +59,7 @@ public class OrderRestController {
         }
         log.info(order.toString());
         customer.setPersonalOrder(null);
-        usersRepository.save(customer);
+        customerService.save(customer);
         orderService.delete(id);
         log.info(customer.toString());
         return new ResponseEntity<Order>(HttpStatus.NO_CONTENT);

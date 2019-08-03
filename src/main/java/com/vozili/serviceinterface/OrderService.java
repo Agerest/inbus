@@ -10,7 +10,7 @@ public interface OrderService {
 
     List<Order> getAll();
 
-    Customer savePersonalOrder(Order order);
+    Customer savePersonalOrder(Order order, Customer customer);
 
     void delete(Long id);
 }

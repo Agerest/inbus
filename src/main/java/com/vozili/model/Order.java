@@ -33,5 +33,4 @@ public class Order implements Serializable {
     @Column(name = "number_auto")
     private String numberAuto;
 
-    private Customer customer;
 }

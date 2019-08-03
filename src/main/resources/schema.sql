@@ -5,8 +5,7 @@ create table if not exists contract
     description  varchar(1000) not null,
     price        int           not null,
     date         time          not null,
-    number_auto  varchar(11)   not null,
-    customer     varchar(1000)
+    number_auto  varchar(11)   not null
 );
 create table if not exists users
 (

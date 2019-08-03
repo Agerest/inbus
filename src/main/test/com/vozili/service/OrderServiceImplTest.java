@@ -44,7 +44,6 @@ public class OrderServiceImplTest {
         Order order = new Order();
         order.setId(999L);
         Customer customer = new Customer("Alex", "123", true);
-//        order.setCustomer(customer);
 
         Mockito.when(orderRepository.getOne(999L)).thenReturn(order);
         Mockito.when(orderRepository.save(order)).thenReturn(order);
@@ -65,8 +64,7 @@ public class OrderServiceImplTest {
         Order order = new Order();
         order.setId(999L);
         Customer customer = new Customer("Alex", "123", true);
-//        order.setCustomer(customer);
-        Customer found = orderService.savePersonalOrder(order);
+        Customer found = orderService.savePersonalOrder(order, customer);
 
         assertThat(found.getPersonalOrder().getId()).isEqualTo(order.getId());
     }

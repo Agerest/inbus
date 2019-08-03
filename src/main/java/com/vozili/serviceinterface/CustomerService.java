@@ -9,4 +9,8 @@ public interface CustomerService {
     Order getBookedOrder(String username);
 
     Order getPersonalOrder(String username);
+
+    Customer save(Customer customer);
+
+    Customer findByUsername(String username);
 }

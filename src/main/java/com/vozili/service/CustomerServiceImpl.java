@@ -33,4 +33,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Order getPersonalOrder(String username) {
         return usersRepository.findByUsername(username).getPersonalOrder();
     }
+
+    @Override
+    public Customer save(Customer customer) {
+        return usersRepository.save(customer);
+    }
+
+    @Override
+    public Customer findByUsername(String username) {
+        return usersRepository.findByUsername(username);
+    }
 }

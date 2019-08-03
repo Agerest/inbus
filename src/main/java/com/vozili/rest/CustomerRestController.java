@@ -27,9 +27,6 @@ public class CustomerRestController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private UsersRepository usersRepository;
-
     @RequestMapping(value = "/booked", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Order> getBookedOrder(@AuthenticationPrincipal UserDetails customer) {
         Order result = customerService.getBookedOrder(customer.getUsername());
@@ -52,7 +49,7 @@ public class CustomerRestController {
 
     @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> getCustomer(@AuthenticationPrincipal UserDetails user) {
-        Customer customer = usersRepository.findByUsername(user.getUsername());
+        Customer customer = customerService.findByUsername(user.getUsername());
         if (customer == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
         }
@@ -62,10 +59,10 @@ public class CustomerRestController {
 
     @RequestMapping(value = "/booked/{id}", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> setBookedOrder(@PathVariable Long id, @AuthenticationPrincipal UserDetails user) {
-        Customer customer = usersRepository.findByUsername(user.getUsername());
+        Customer customer = customerService.findByUsername(user.getUsername());
         Order order = orderService.getById(id);
         customer.setBookedOrder(order);
-        usersRepository.save(customer);
+        customerService.save(customer);
         log.info(customer.toString());
         if (order == null) {
             return new ResponseEntity<Customer>(HttpStatus.NOT_FOUND);
@@ -76,9 +73,9 @@ public class CustomerRestController {
 
     @RequestMapping(value = "/booked", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<Customer> deleteBookedOrder(@AuthenticationPrincipal UserDetails user) {
-        Customer customer = usersRepository.findByUsername(user.getUsername());
+        Customer customer = customerService.findByUsername(user.getUsername());
         customer.setBookedOrder(null);
-        usersRepository.save(customer);
+        customerService.save(customer);
         log.info(customer.toString());
         return new ResponseEntity<Customer>(customer, HttpStatus.OK);
     }

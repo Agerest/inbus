@@ -4,7 +4,9 @@ import com.vozili.model.Customer;
 import com.vozili.repository.UsersRepository;
 import com.vozili.serviceinterface.CustomerService;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -36,14 +38,14 @@ public class CustomerServiceImplTest {
     public void setUp() {
         Customer alex = new Customer("Alex", "12345",true);
 
-//        Mockito.when(customerRepository.findOne(999L)).thenReturn(alex);
+        Mockito.when(usersRepository.findOne(alex.getUsername())).thenReturn(alex);
     }
 
-/*    @Test
+    @Test
     public void whenValidId_thenCustomerShouldBeFound() {
-        Long id = 999L;
-        Customer found = customerService.getCustomer(id);
+        String username = "Alex";
+        Customer found = customerService.getCustomer(username);
 
-        assertThat(found.getId()).isEqualTo(id);
-    }*/
+        assertThat(found.getUsername()).isEqualTo(username);
+    }
 }

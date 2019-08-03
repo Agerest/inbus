@@ -29,9 +29,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Customer savePersonalOrder(Order order) {
+    public Customer savePersonalOrder(Order order, Customer customer) {
         Order result = repository.save(order);
-        Customer customer = order.getCustomer();
         customer.setPersonalOrder(result);
         usersRepository.save(customer);
         return customer;

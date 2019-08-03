@@ -3,6 +3,7 @@ package com.vozili.rest;
 import com.vozili.model.Customer;
 import com.vozili.repository.UsersRepository;
 import com.vozili.security.RegistrationForm;
+import com.vozili.serviceinterface.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,21 +15,25 @@ import org.springframework.web.bind.annotation.PostMapping;
 @Controller
 public class RegistrationController {
 
-    private UsersRepository usersRepository;
+    private CustomerService customerService;
     private PasswordEncoder passwordEncoder;
 
     @Autowired
     public RegistrationController(
-            UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
-        this.usersRepository = usersRepository;
+            CustomerService customerService, PasswordEncoder passwordEncoder) {
+        this.customerService = customerService;
         this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/registration")
     public String registration(RegistrationForm form, Model model) {
         Customer customer = form.toUser(passwordEncoder);
+        if (customerService.findByUsername(customer.getUsername()) != null) {
+            model.addAttribute("error", true);
+            return "Signup";
+        }
         log.info(customer.toString());
-        usersRepository.save(customer);
+        customerService.save(customer);
         return "redirect:/login";
     }
 
