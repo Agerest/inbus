@@ -24,7 +24,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private DataSource dataSource;
 
     @Autowired
-    @Qualifier("UserRepositoryUserDetailsService")
+    @Qualifier("userRepositoryUserDetailsService")
     public UserDetailsService userDetailsService;
 
     @Autowired

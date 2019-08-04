@@ -14,11 +14,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private UsersRepository usersRepository;
 
-    @Bean("UserRepositoryUserDetailsService")
-    public UserDetailsService userDetailsService() {
-        return new UserRepositoryUserDetailsService(usersRepository);
-    }
-
     @Override
     public Customer getCustomer(String username) {
         return usersRepository.findOne(username);
