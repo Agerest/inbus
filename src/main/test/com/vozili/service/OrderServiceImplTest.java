@@ -39,20 +39,13 @@ public class OrderServiceImplTest {
     @MockBean
     private UsersRepository usersRepository;
 
-    @Before
-    public void setUp() {
-        Order order = new Order();
-        order.setId(999L);
-        Customer customer = new Customer("Alex", "123", true);
-
-        Mockito.when(orderRepository.getOne(999L)).thenReturn(order);
-        Mockito.when(orderRepository.save(order)).thenReturn(order);
-        Mockito.when(usersRepository.save(customer)).thenReturn(customer);
-    }
-
     @Test
     public void whenValidId_thenOrderShouldBeFound() {
         Long id = 999L;
+        Order order = new Order();
+        order.setId(id);
+
+        Mockito.when(orderRepository.getOne(999L)).thenReturn(order);
 
         Order found = orderService.getById(id);
 
@@ -64,6 +57,10 @@ public class OrderServiceImplTest {
         Order order = new Order();
         order.setId(999L);
         Customer customer = new Customer("Alex", "123", true);
+
+        Mockito.when(orderRepository.save(order)).thenReturn(order);
+        Mockito.when(usersRepository.save(customer)).thenReturn(customer);
+
         Customer found = orderService.savePersonalOrder(order, customer);
 
         assertThat(found.getPersonalOrder().getId()).isEqualTo(order.getId());

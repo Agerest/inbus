@@ -3,19 +3,15 @@ package com.vozili.rest;
 import com.vozili.config.SpringSecurityWebAuxTestConfig;
 import com.vozili.model.Customer;
 import com.vozili.model.Order;
-import com.vozili.service.UserRepositoryUserDetailsService;
 import com.vozili.serviceinterface.CustomerService;
 import com.vozili.serviceinterface.OrderService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -90,13 +86,12 @@ public class CustomerRestControllerTest {
     @Test
     @WithUserDetails(value = "Alex", userDetailsServiceBeanName = "testUserDetailsService")
     public void givenCustomerWithBookedOrder_whenSetBookedOrder_thenReturnJsonArray() throws Exception {
-        Long id = 99L;
+        Long id = 999L;
 
         Customer customer = new Customer("Alex", "123",true);
 
         Order order = new Order();
-        order.setId(999L);
-
+        order.setId(id);
 
         given(customerService.findByUsername(customer.getUsername())).willReturn(customer);
         given(orderService.getById(id)).willReturn(order);
